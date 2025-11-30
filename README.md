@@ -8,7 +8,7 @@ Docker container runs a cron job that will trigger an Ansible playbook that woul
 
 ## Setup
 
-Once the environment variables are set, run it via Docker-compatible environment such as Synology, Kubernetes, etc:
+Once the environment variables are set (see below for details), run it via Docker-compatible environment such as Synology, Kubernetes, etc:
 ```bash
 docker run adam/hawk-backup-switch:latest
 ```
