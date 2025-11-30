@@ -58,6 +58,7 @@ jobs:
         id: meta
         run: |
           echo REPO_NAME=$(echo ${GITHUB_REPOSITORY} | awk -F"/" '{print $2}') >> $GITHUB_OUTPUT
+          echo DATE_RELEASE=$(echo "`date +'%Y.%m.%d'`") >> $GITHUB_OUTPUT
 
       - name: Report of Success
         if: needs.release.result == 'success' && needs.deploy.result == 'success'
@@ -67,7 +68,7 @@ jobs:
           PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
         with:
           title: Gitea DevOps
-          message: ✅ Built & Pushed ${{ steps.meta.outputs.REPO_NAME }}:latest app!
+          message: ✅ Built & Pushed ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ env.IMAGE_TAG_ENDING }} app!
 
       - name: Report of Failure
         if: needs.release.result != 'success' && needs.deploy.result != 'success'
@@ -77,4 +78,4 @@ jobs:
           PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
         with:
           title: Gitea DevOps
-          message: ❌ Unable to build & push ${{ steps.meta.outputs.REPO_NAME }}:latest app.
+          message: ❌ Unable to build & push ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ env.IMAGE_TAG_ENDING }} app.
