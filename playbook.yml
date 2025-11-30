@@ -1,28 +1,54 @@
 ---
 # https://github.com/wpacket/pan-ansible/blob/master/pan_config_pull.yml
 - name: Backup Config from HP Switch
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     # HP Switch
-    
+    ansible_user: "{{ lookup('ansible.builtin.env', 'SWITCH_USERNAME') }}"
+    ansible_password: "{{ lookup('ansible.builtin.env', 'SWITCH_PASSWORD') }}"
+    ansible_network_os: arubanetworks.aos_switch.arubaoss
+    ansible_connection: network_cli
+    ansible_command_timeout: 30
     # SFTP Server
     sftp_host: "{{ lookup('ansible.builtin.env', 'SFTP_HOST') }}"
-    sftp_port: "{{ lookup('ansible.builtin.env', 'SFTP_PORT', default=22) }}"
+    sftp_port: "{{ lookup('ansible.builtin.env', 'SFTP_PORT') }}"
     sftp_username: "{{ lookup('ansible.builtin.env', 'SFTP_USERNAME') }}"
     sftp_password: "{{ lookup('ansible.builtin.env', 'SFTP_PASSWORD') }}"
     sftp_path: "{{ lookup('ansible.builtin.env', 'SFTP_PATH') }}"
     # Pushover
-    pushover_token: "{{ lookup('ansible.builtin.env', 'PUSHOVER_TOKEN') }}"
-    pushover_user: "{{ lookup('ansible.builtin.env', 'PUSHOVER_USER') }}"
+    pushover_user: "{{ lookup('ansible.builtin.env', 'PUSHOVER_USER_KEY') }}"
+    pushover_token: "{{ lookup('ansible.builtin.env', 'PUSHOVER_APP_TOKEN') }}"
   tasks:
     - name: Perform Backup
       block:
         - name: Create Config File Path
           ansible.builtin.set_fact:
-            backup_config_file: "{{ firewall_host }}-config__{{ now().strftime('%Y.%m.%d') }}.xml"
+            backup_config_file: "{{ inventory_hostname }}__config__{{ now().strftime('%Y.%m.%d') }}.cfg"
 
-        
+        - name: Create .downloads/ Directory
+          delegate_to: localhost
+          ansible.builtin.file:
+            path: .downloads/
+            state: directory
+            mode: '0755'
+
+        - name: Backup & Download Config File
+          arubanetworks.aos_switch.arubaoss_config:
+            backup: True
+            backup_options:
+              filename: "{{ backup_config_file }}"
+              dir_path: .downloads/
+
+        - name: Upload Config to SFTP
+          delegate_to: localhost
+          ansible.builtin.shell: "echo 'put .downloads/{{ backup_config_file }}' | sshpass -p '{{ sftp_password }}' sftp -o StrictHostKeyChecking=no -P {{ sftp_port }} {{ sftp_username }}@{{ sftp_host }}:{{ sftp_path }}"
+
+        - name: Delete Config File Locally
+          delegate_to: localhost
+          ansible.builtin.file:
+            path: "./downloads/{{ backup_config_file }}"
+            state: absent
 
       rescue:
         - name: Notify Admin of Failed Backup
@@ -34,6 +60,6 @@
               Content-Type: application/json
             body_format: json
             body:
-              token: "{{ pushover_token }}"
               user: "{{ pushover_user }}"
-              message: "❌ Unable to perform config backup for {{ firewall_host }}!"
+              token: "{{ pushover_token }}"
+              message: "❌ Unable to perform config backup for {{ inventory_hostname }}!"
