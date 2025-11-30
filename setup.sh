@@ -9,8 +9,3 @@ PYTHON_SITE_PACKAGES=`python -c 'import site; print(site.getsitepackages()[0])'`
 .venv/bin/python3 -m pip install -r requirements.txt
 .venv/bin/ansible-galaxy collection install -p $PYTHON_SITE_PACKAGES/ansible_collections -r requirements.yml --force
 deactivate
-
-# Run playbook
-PYTHON_SITE_PACKAGES=`python -c 'import site; print(site.getsitepackages()[0])'`
-export ANSIBLE_COLLECTIONS_PATH=$PYTHON_SITE_PACKAGES/ansible_collections
-.venv/bin/ansible-playbook playbook.yml -i $SWITCH_HOST,

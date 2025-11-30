@@ -9,8 +9,11 @@ for var in $REQUIRED_VARS; do
 done
 echo "✅ All required environment variables are set."
 
+# Setup .env environment
+./setup.sh
+
 # Configure cron schedule
-echo "$CRON_SCHEDULE ansible-playbook /app/playbook.yml -i $SWITCH_HOST >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+echo "$CRON_SCHEDULE /app/run.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
 
 # Run cron in foreground
 exec crond -f
