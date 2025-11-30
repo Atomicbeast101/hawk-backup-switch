@@ -4,17 +4,20 @@ Docker-based service that leverages Ansible to perform backups for HP switches (
 
 ## How it Works
 
-TODO
+Docker container runs a cron job that will trigger an Ansible playbook that would access the switch to download the config into `/app/.downloads` folder, uploads it to SFTP endpoint, and deletes that local config file. Pushover notifications are sent if the Ansible playbook fails to download the config or upload it to SFTP endpoint.
 
 ## Setup
 
-TODO
+Once the environment variables are set, run it via Docker-compatible environment such as Synology, Kubernetes, etc:
+```bash
+docker run adam/hawk-backup-switch:latest
+```
 
 ## Environment Variables
 
 | Environment Variable | Description | Default |
 | :------- | :------ | :-------: |
-| CRON_SCHEDULE | Interval to run backups. | 0 0 * * * (daily) |
+| CRON_SCHEDULE | Interval to run backups (defaults to daily). | 0 0 * * * |
 | SWITCH_HOST | FQDN/IP address of HP switch to perform config backup. | N/A |
 | SWITCH_USERNAME | Username for HP switch SSH access. | N/A |
 | SWITCH_PASSWORD | Password for HP switch access. | N/A |
