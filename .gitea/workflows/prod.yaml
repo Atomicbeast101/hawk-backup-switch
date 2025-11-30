@@ -5,7 +5,7 @@ on:
       - main
 
 env:
-  IMAGE_BASE: ${{ vars.VPS_ACR_URL }}/${{ vars.VPS_ACR_USERNAME }}
+  IMAGE_BASE: ${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}
   IMAGE_TAG_ENDING: ""
 
 jobs:
