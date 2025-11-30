@@ -10,7 +10,7 @@ RUN ansible-galaxy collection install -r /tmp/requirements.yml --force
 
 # Environment Variables
 ENV REQUIRED_VARS="SWITCH_HOST SWITCH_USERNAME SWITCH_PASSWORD SFTP_HOST SFTP_USERNAME SFTP_PASSWORD SFTP_PATH PUSHOVER_USER_KEY PUSHOVER_APP_TOKEN"
-ENV CRON_SCHEDULE="0 0 * * * (daily)"
+ENV CRON_SCHEDULE="0 0 * * *"
 ENV SFTP_PORT=22
 
 # Start App
