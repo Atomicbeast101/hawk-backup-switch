@@ -1,8 +1,8 @@
-FROM ubuntu:26.04
+FROM alpine:3.22
 
 # Dependencies
 COPY packages.txt /tmp/packages.txt
-RUN apt update && apt install --no-install-recommends -y $(cat /tmp/packages.txt)
+RUN apk update && apk add --no-cache $(awk '{print $1}' /tmp/packages.txt)
 
 # Environment Variables
 ENV REQUIRED_VARS="SWITCH_HOST SWITCH_USERNAME SWITCH_PASSWORD SFTP_HOST SFTP_USERNAME SFTP_PASSWORD SFTP_PATH PUSHOVER_USER_KEY PUSHOVER_APP_TOKEN"

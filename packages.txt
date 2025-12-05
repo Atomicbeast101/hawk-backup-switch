@@ -1,10 +1,11 @@
-python-is-python3
-build-essential
 openssh-client
-python3-venv
-python3-pip
+busybox-suid
+python3-dev
+build-base
+libssh-dev
 python3
+py3-pip
 sshpass
-cron
+cronie
 curl
 bash
