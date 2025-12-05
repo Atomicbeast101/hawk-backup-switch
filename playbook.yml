@@ -35,6 +35,10 @@
             state: directory
             mode: '0755'
 
+        - name: debug
+          arubanetworks.aos_switch.arubaoss_command:
+            commands: ['show running-config']
+
         - name: Backup & Download Config File
           arubanetworks.aos_switch.arubaoss_config:
             backup: True
