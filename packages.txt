@@ -1,11 +1,9 @@
+build-essential
 openssh-client
 busybox-suid
-python3-dev
-build-base
-libssh-dev
+python3-pip
 python3
-py3-pip
 sshpass
-cronie
+cron
 curl
 bash
