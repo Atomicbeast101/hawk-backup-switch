@@ -3,6 +3,8 @@
 - name: Backup Config from HP Switch
   hosts: all
   gather_facts: no
+  collections:
+    - arubanetworks.aos_switch
   vars:
     # HP Switch
     ansible_user: "{{ lookup('ansible.builtin.env', 'SWITCH_USERNAME') }}"
