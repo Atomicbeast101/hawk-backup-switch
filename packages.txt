@@ -1,6 +1,6 @@
-build-essential
 openssh-client
 busybox-suid
+build-base
 python3
 py3-pip
 sshpass
