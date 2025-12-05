@@ -1,3 +1,4 @@
 ---
 collections:
-  - arubanetworks.aos_switch
+  - name: arubanetworks.aos_switch
+    version: 1.7.0
