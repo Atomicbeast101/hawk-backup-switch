@@ -1,3 +1,4 @@
+build-essential
 openssh-client
 busybox-suid
 python3
