@@ -15,7 +15,7 @@ Whenever the cron schedule hits, it runs an Ansible playbook that does the follo
 3) Uploads that config file to SFTP endpoint.
 4) Removes the config file from `/app/.downloads`.
 
-If any of the tasks above fails, a Pushover notification will be sent stating that the backup failed for a specific firewall (by hostname).
+If any of the tasks above fails, a Pushover notification will be sent stating that the backup failed for a specific switch (by hostname).
 
 ## Setup - Docker
 
