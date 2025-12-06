@@ -12,6 +12,7 @@
     ansible_network_os: arubanetworks.aos_switch.arubaoss
     ansible_connection: network_cli
     ansible_command_timeout: 30
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" # Prevents built-in SSH key validation as it's using standard username/password to access it
     # SFTP Server
     sftp_host: "{{ lookup('ansible.builtin.env', 'SFTP_HOST') }}"
     sftp_port: "{{ lookup('ansible.builtin.env', 'SFTP_PORT') }}"
@@ -34,10 +35,6 @@
             path: .downloads/
             state: directory
             mode: '0755'
-
-        - name: debug
-          arubanetworks.aos_switch.arubaoss_command:
-            commands: ['show running-config']
 
         - name: Backup & Download Config File
           arubanetworks.aos_switch.arubaoss_config:
