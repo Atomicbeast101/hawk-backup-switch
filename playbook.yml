@@ -36,12 +36,24 @@
             state: directory
             mode: '0755'
 
-        - name: Backup & Download Config File
-          arubanetworks.aos_switch.arubaoss_config:
-            backup: True
-            backup_options:
-              filename: "{{ backup_config_file }}"
-              dir_path: .downloads/
+        #### NOTE: This does not work in Docker environment, switching to a different solution (found after this task) instead ####
+        # - name: Backup & Download Config File
+        #   arubanetworks.aos_switch.arubaoss_config:
+        #     backup: True
+        #     backup_options:
+        #       filename: "{{ backup_config_file }}"
+        #       dir_path: .downloads/
+        #### NOTE: This does not work in Docker environment, switching to a different solution (found after this task) instead ####
+
+        - name: Load Config Data
+          arubanetworks.aos_switch.arubaoss_command:
+            commands: ['show running-config']
+          register: config_data
+
+        - name: Write Config Variable to File
+          copy:
+            content: "{{ config_data.stdout[0] | replace('\\n', '\n') }}"
+            dest: ".downloads/{{ backup_config_file }}"
 
         - name: Upload Config to SFTP
           delegate_to: localhost
@@ -50,7 +62,7 @@
         - name: Delete Config File Locally
           delegate_to: localhost
           ansible.builtin.file:
-            path: "./downloads/{{ backup_config_file }}"
+            path: ".downloads/{{ backup_config_file }}"
             state: absent
 
       rescue:
