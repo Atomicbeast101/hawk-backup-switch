@@ -22,5 +22,4 @@ printenv > /etc/environment
 
 # Run cron in foreground
 echo "Started cron job!"
-mkdir /var/log
 exec crond -f && tail -f /var/log/cron.log
